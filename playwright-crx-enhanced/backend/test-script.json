@@ -1,0 +1,6 @@
+{
+  "name": "Test Script",
+  "description": "A test script for Playwright",
+  "code": "import { test, expect } from '@playwright/test';\n\ntest('should work', async ({ page }) => {\n  await page.goto('https://example.com');\n  await expect(page).toHaveTitle('Example Domain');\n});",
+  "language": "typescript"
+}

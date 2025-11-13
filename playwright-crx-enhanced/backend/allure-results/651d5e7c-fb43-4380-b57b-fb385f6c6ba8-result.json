@@ -1,0 +1,46 @@
+{
+  "uuid": "651d5e7c-fb43-4380-b57b-fb385f6c6ba8",
+  "historyId": "651d5e7c-fb43-4380-b57b-fb385f6c6ba8",
+  "testCaseId": "651d5e7c-fb43-4380-b57b-fb385f6c6ba8",
+  "fullName": "651d5e7c-fb43-4380-b57b-fb385f6c6ba8",
+  "name": "651d5e7c-fb43-4380-b57b-fb385f6c6ba8",
+  "status": "passed",
+  "statusDetails": {},
+  "stage": "finished",
+  "start": 1761558619900,
+  "stop": 1761558619900,
+  "steps": [
+    {
+      "name": "Navigate to page",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761558619349,
+      "stop": 1761558619849
+    },
+    {
+      "name": "Fill input field",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761558619564,
+      "stop": 1761558619864
+    },
+    {
+      "name": "Click submit button",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761558619675,
+      "stop": 1761558619875
+    },
+    {
+      "name": "Verify success message",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761558619737,
+      "stop": 1761558619887
+    }
+  ]
+}

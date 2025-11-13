@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CRX Login & Recorder</title>
+    <style>
+      body { font-family: system-ui, sans-serif; padding: 12px; width: 340px; }
+      h3 { margin: 8px 0; }
+      label { display: block; margin: 8px 0 4px; }
+      input { width: 100%; padding: 8px; box-sizing: border-box; }
+      button { margin-top: 8px; padding: 8px 12px; }
+      .row { display: flex; gap: 8px; }
+      .row button { flex: 1; }
+      .status { margin-top: 10px; font-size: 12px; min-height: 16px; }
+      .section { border-top: 1px solid #ddd; margin-top: 12px; padding-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <h3>Login</h3>
+    <form id="login-form">
+      <label for="email">Email</label>
+      <input id="email" type="email" value="crx@test.local" required />
+
+      <label for="password">Password</label>
+      <input id="password" type="password" value="Passw0rd!" required />
+      
+      <button type="submit">Sign In</button>
+      <div class="status" id="status"></div>
+    </form>
+
+    <div class="section">
+      <h3>Recorder</h3>
+      <label for="script-name">Script name</label>
+      <input id="script-name" type="text" value="Recorded Script" />
+      <div class="row">
+        <button id="start-record">Start Recording</button>
+        <button id="stop-save">Stop & Save</button>
+      </div>
+      <div class="row">
+        <button id="execute-last">Execute Last Saved</button>
+      </div>
+      <div class="status" id="rec-status"></div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

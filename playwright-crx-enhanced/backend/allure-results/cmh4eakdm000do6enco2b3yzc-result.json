@@ -1,0 +1,46 @@
+{
+  "uuid": "cmh4eakdm000do6enco2b3yzc",
+  "historyId": "cmh4eakdm000do6enco2b3yzc",
+  "testCaseId": "cmh4eakdm000do6enco2b3yzc",
+  "fullName": "cmh4eakdm000do6enco2b3yzc",
+  "name": "cmh4eakdm000do6enco2b3yzc",
+  "status": "passed",
+  "statusDetails": {},
+  "stage": "finished",
+  "start": 1761282784288,
+  "stop": 1761282784288,
+  "steps": [
+    {
+      "name": "Navigate to page",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761282783706,
+      "stop": 1761282784206
+    },
+    {
+      "name": "Fill input field",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761282783926,
+      "stop": 1761282784226
+    },
+    {
+      "name": "Click submit button",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761282784045,
+      "stop": 1761282784245
+    },
+    {
+      "name": "Verify success message",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761282784117,
+      "stop": 1761282784267
+    }
+  ]
+}

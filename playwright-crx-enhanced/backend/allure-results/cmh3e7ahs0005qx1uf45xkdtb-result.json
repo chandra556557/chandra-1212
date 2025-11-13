@@ -1,0 +1,46 @@
+{
+  "uuid": "cmh3e7ahs0005qx1uf45xkdtb",
+  "historyId": "cmh3e7ahs0005qx1uf45xkdtb",
+  "testCaseId": "cmh3e7ahs0005qx1uf45xkdtb",
+  "fullName": "cmh3e7ahs0005qx1uf45xkdtb",
+  "name": "cmh3e7ahs0005qx1uf45xkdtb",
+  "status": "passed",
+  "statusDetails": {},
+  "stage": "finished",
+  "start": 1761222165461,
+  "stop": 1761222165462,
+  "steps": [
+    {
+      "name": "Navigate to page",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761222164894,
+      "stop": 1761222165394
+    },
+    {
+      "name": "Fill input field",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761222165109,
+      "stop": 1761222165409
+    },
+    {
+      "name": "Click submit button",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761222165227,
+      "stop": 1761222165427
+    },
+    {
+      "name": "Verify success message",
+      "status": "passed",
+      "statusDetails": {},
+      "stage": "finished",
+      "start": 1761222165293,
+      "stop": 1761222165443
+    }
+  ]
+}

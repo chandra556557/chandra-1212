@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  password          String
+  name              String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  extensionScripts  ExtensionScript[]
+  projects          Project[]
+  refreshTokens     RefreshToken[]
+  scripts           Script[]
+  testRuns          TestRun[]
+  testSuites        TestSuite[]
+  apiRequests       ApiRequest[]
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scripts     Script[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Script {
+  id                  String               @id @default(cuid())
+  name                String
+  description         String?
+  language            String               @default("typescript")
+  code                String
+  projectId           String?
+  userId              String
+  browserType         String               @default("chromium")
+  viewport            Json?
+  testIdAttribute     String               @default("data-testid")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  breakpoints         Breakpoint[]
+  project             Project?             @relation(fields: [projectId], references: [id])
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testRuns            TestRun[]
+  variables           Variable[]
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+model TestRun {
+  id              String     @id @default(cuid())
+  scriptId        String
+  userId          String
+  status          String
+  duration        Int?
+  errorMsg        String?
+  traceUrl        String?
+  screenshotUrls  Json?
+  videoUrl        String?
+  environment     String?
+  browser         String     @default("chromium")
+  viewport        Json?
+  startedAt       DateTime   @default(now())
+  completedAt     DateTime?
+  executionReportUrl String?
+  script          Script     @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps           TestStep[]
+
+  @@index([scriptId])
+  @@index([userId])
+  @@index([status])
+  @@index([startedAt])
+}
+
+model TestStep {
+  id              String   @id @default(cuid())
+  testRunId       String
+  stepNumber      Int
+  action          String
+  selector        String?
+  value           String?
+  status          String
+  duration        Int?
+  errorMsg        String?
+  timestamp       DateTime @default(now())
+  testRun         TestRun  @relation(fields: [testRunId], references: [id], onDelete: Cascade)
+
+  @@index([testRunId])
+  @@index([stepNumber])
+}
+
+
+model ExtensionScript {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  code        String
+  scriptType  String
+  userId      String
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([scriptType])
+}
+
+model Variable {
+  id        String   @id @default(cuid())
+  scriptId  String
+  name      String
+  value     String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  script    Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+
+  @@unique([scriptId, name])
+  @@index([scriptId])
+}
+
+model Breakpoint {
+  id         String   @id @default(cuid())
+  scriptId   String
+  lineNumber Int
+  enabled    Boolean  @default(true)
+  condition  String?
+  createdAt  DateTime @default(now())
+  script     Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+
+  @@unique([scriptId, lineNumber])
+  @@index([scriptId])
+}
+
+// Test Data Management Models
+model TestSuite {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testData    TestData[]
+
+  @@index([userId])
+}
+
+model TestData {
+  id          String    @id @default(cuid())
+  suiteId     String
+  name        String
+  environment String    @default("dev")
+  type        String    @default("user")
+  data        Json
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  suite       TestSuite @relation(fields: [suiteId], references: [id], onDelete: Cascade)
+
+  @@index([suiteId])
+  @@index([environment])
+  @@index([type])
+}
+
+// API Testing Models
+model ApiRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  method      String
+  url         String
+  headers     Json?
+  body        Json?
+  environment String   @default("dev")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([environment])
+}

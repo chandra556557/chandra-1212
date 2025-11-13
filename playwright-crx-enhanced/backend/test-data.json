@@ -1,0 +1,11 @@
+{
+  "scriptId": "test-script-1",
+  "brokenLocator": {
+    "locator": "#broken-button",
+    "type": "id"
+  },
+  "validLocator": {
+    "locator": ".working-button",
+    "type": "css"
+  }
+}

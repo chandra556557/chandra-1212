@@ -1,0 +1,547 @@
+{
+  "info": {
+    "name": "Playwright-CRX Enhanced API",
+    "description": "Complete API collection for Enhanced Playwright-CRX with Self-Healing, DDT, and more",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/api",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "scriptId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "projectId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', response.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', response.refreshToken);",
+                  "    pm.collectionVariables.set('userId', response.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"name\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', response.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', response.refreshToken);",
+                  "    pm.collectionVariables.set('userId', response.user.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', response.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('projectId', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"E-Commerce Tests\",\n  \"description\": \"Test suite for e-commerce application\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scripts",
+      "item": [
+        {
+          "name": "Create Script",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('scriptId', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Login Test\",\n  \"description\": \"Test user login functionality\",\n  \"language\": \"typescript\",\n  \"code\": \"import { test, expect } from '@playwright/test';\\n\\ntest('login', async ({ page }) => {\\n  await page.goto('https://example.com/login');\\n  await page.fill('#username', 'testuser');\\n  await page.fill('#password', 'password123');\\n  await page.click('#loginButton');\\n  await expect(page).toHaveURL(/dashboard/);\\n});\",\n  \"projectId\": \"{{projectId}}\",\n  \"browserType\": \"chromium\",\n  \"testIdAttribute\": \"data-testid\",\n  \"selfHealingEnabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/scripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["scripts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Scripts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/scripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["scripts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Script",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/scripts/{{scriptId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["scripts", "{{scriptId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Script",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/scripts/{{scriptId}}/execute",
+              "host": ["{{baseUrl}}"],
+              "path": ["scripts", "{{scriptId}}", "execute"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Self-Healing",
+      "item": [
+        {
+          "name": "Record Locator Failure",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scriptId\": \"{{scriptId}}\",\n  \"brokenLocator\": {\n    \"locator\": \"#oldButton\",\n    \"type\": \"css\",\n    \"elementTag\": \"button\",\n    \"elementText\": \"Submit\"\n  },\n  \"validLocator\": {\n    \"locator\": \"#newButton\",\n    \"type\": \"css\",\n    \"elementTag\": \"button\",\n    \"elementText\": \"Submit\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/self-healing/record-failure",
+              "host": ["{{baseUrl}}"],
+              "path": ["self-healing", "record-failure"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/self-healing/suggestions/{{scriptId}}?status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["self-healing", "suggestions", "{{scriptId}}"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Suggestion",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/self-healing/approve/:suggestionId",
+              "host": ["{{baseUrl}}"],
+              "path": ["self-healing", "approve", ":suggestionId"],
+              "variable": [
+                {
+                  "key": "suggestionId",
+                  "value": "suggestion-id-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Locator Strategies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/self-healing/strategies",
+              "host": ["{{baseUrl}}"],
+              "path": ["self-healing", "strategies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Strategy Priority",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"strategies\": [\n    { \"strategy\": \"testid\", \"priority\": 1, \"enabled\": true },\n    { \"strategy\": \"id\", \"priority\": 2, \"enabled\": true },\n    { \"strategy\": \"css\", \"priority\": 3, \"enabled\": true },\n    { \"strategy\": \"xpath\", \"priority\": 4, \"enabled\": true },\n    { \"strategy\": \"name\", \"priority\": 5, \"enabled\": false }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/self-healing/strategies/priority",
+              "host": ["{{baseUrl}}"],
+              "path": ["self-healing", "strategies", "priority"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data-Driven Testing (DDT)",
+      "item": [
+        {
+          "name": "Upload CSV File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/test-data.csv"
+                },
+                {
+                  "key": "scriptId",
+                  "value": "{{scriptId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/test-data/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-data", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Data Files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/test-data/files?scriptId={{scriptId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-data", "files"],
+              "query": [
+                {
+                  "key": "scriptId",
+                  "value": "{{scriptId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Data Rows",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/test-data/rows/:fileId?limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-data", "rows", ":fileId"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "fileId",
+                  "value": "file-id-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Data File",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/test-data/:fileId",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-data", ":fileId"],
+              "variable": [
+                {
+                  "key": "fileId",
+                  "value": "file-id-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

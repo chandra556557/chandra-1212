@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ScriptCueCards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 ScriptCueCards Component Test</h1>
+        
+        <div class="status">
+            <strong>Step 1:</strong> Make sure backend is running on <code>localhost:3001</code>
+        </div>
+        
+        <div class="status">
+            <strong>Step 2:</strong> Open frontend dev server: <a href="http://localhost:5174" target="_blank">http://localhost:5174</a>
+        </div>
+        
+        <div class="status">
+            <strong>Step 3:</strong> Login with: <code>demo@example.com / demo123</code>
+        </div>
+        
+        <div class="status">
+            <strong>Step 4:</strong> Navigate to Scripts view (click "📝 Scripts" in sidebar)
+        </div>
+        
+        <div class="status">
+            <strong>Step 5:</strong> Click "🚀 Show Workflow" on any script card
+        </div>
+        
+        <h2>Troubleshooting Checklist:</h2>
+        <ul>
+            <li>✅ Backend running? Check: <a href="http://localhost:3001/api/health" target="_blank">http://localhost:3001/api/health</a></li>
+            <li>✅ Frontend running? Check: <a href="http://localhost:5174" target="_blank">http://localhost:5174</a></li>
+            <li>✅ Logged in? Check browser console for errors</li>
+            <li>✅ Scripts exist? Navigate to Scripts view and check if you see any scripts</li>
+            <li>✅ Open browser DevTools (F12) and check Console tab for errors</li>
+        </ul>
+        
+        <h2>Expected Behavior:</h2>
+        <p>When you click "🚀 Show Workflow" on a script, you should see:</p>
+        <ol>
+            <li>Header: "New Script Workflow - Guided 5-step process"</li>
+            <li>Progress indicator with 5 dots</li>
+            <li>5 cards displayed in a grid:
+                <ul>
+                    <li>Card 1: Generate (Blue)</li>
+                    <li>Card 2: Enhance with AI (Indigo)</li>
+                    <li>Card 3: Human Validation (Green)</li>
+                    <li>Card 4: Finalize / Run (Amber)</li>
+                    <li>Card 5: AI Insights (Purple)</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+    
+    <script>
+        console.log('ScriptCueCards Test Page Loaded');
+        console.log('Check these URLs:');
+        console.log('- Backend: http://localhost:3001/api/health');
+        console.log('- Frontend: http://localhost:5174');
+    </script>
+</body>
+</html>
