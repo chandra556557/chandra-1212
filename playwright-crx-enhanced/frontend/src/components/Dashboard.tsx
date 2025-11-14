@@ -6,7 +6,7 @@ import ImportScriptModal from './ImportScriptModal';
 import ScriptValidationModal from './ScriptValidationModal';
 import ScriptCueCards from './ScriptCueCards';
 import TestDataManager from './TestDataManager';
-import ErrorAnalysis from './ErrorAnalysis';
+// import ErrorAnalysis from './ErrorAnalysis';
 import './Dashboard.css';
 
 const API_URL = 'http://localhost:3001/api';
@@ -37,11 +37,11 @@ interface TestRun {
   script: { name: string };
 }
 
-interface Stats {
-  totalScripts: number;
-  totalRuns: number;
-  successRate: number;
-}
+// interface Stats {
+//   totalScripts: number;
+//   totalRuns: number;
+//   successRate: number;
+// }
 
 type ActiveView = 
   | 'overview' 
@@ -62,7 +62,7 @@ export const Dashboard: React.FC = () => {
   const [projectLoading, setProjectLoading] = useState(false);
   const [scripts, setScripts] = useState<Script[]>([]);
   const [testRuns, setTestRuns] = useState<TestRun[]>([]);
-  const [stats, setStats] = useState<Stats>({ totalScripts: 0, totalRuns: 0, successRate: 0 });
+  // const [stats, setStats] = useState<Stats>({ totalScripts: 0, totalRuns: 0, successRate: 0 });
   const [loading, setLoading] = useState(false);
   const [selectedReport, setSelectedReport] = useState<string | null>(null);
   const [generatingReport, setGeneratingReport] = useState<string | null>(null);
@@ -174,12 +174,12 @@ export const Dashboard: React.FC = () => {
       setScripts(scriptData);
       setTestRuns(runData);
 
-      const successCount = runData.filter((r: TestRun) => r.status === 'passed').length;
-      setStats({
-        totalScripts: scriptData.length,
-        totalRuns: runData.length,
-        successRate: runData.length > 0 ? Math.round((successCount / runData.length) * 100) : 0
-      });
+      // const successCount = runData.filter((r: TestRun) => r.status === 'passed').length;
+      // setStats({
+      //   totalScripts: scriptData.length,
+      //   totalRuns: runData.length,
+      //   successRate: runData.length > 0 ? Math.round((successCount / runData.length) * 100) : 0
+      // });
     } catch (error: any) {
       console.error('Error loading data:', error);
     } finally {
@@ -265,7 +265,7 @@ Navigating to Test Runs...`);
       const fileContent = await importFile.text();
       const scriptName = importFile.name.replace(/\.[^/.]+$/, '');
       
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/scripts`,
         {
           name: scriptName,
@@ -800,7 +800,10 @@ Navigating to Test Runs...`);
           {/* Analytics */}
           {activeView === 'analytics' && (
             <div className="view-container full-width">
-              <ErrorAnalysis projectId={selectedProjectId} />
+              <div className="analytics-placeholder">
+                <h3>Analytics Dashboard</h3>
+                <p>Analytics features coming soon...</p>
+              </div>
             </div>
           )}
 

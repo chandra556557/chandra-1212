@@ -20,23 +20,23 @@ interface Env {
   variables: KeyVal[];
 }
 
-interface ApiRequest {
-  id: string;
-  name: string;
-  method: Method;
-  url: string;
-  headers: KeyVal[];
-  bodyMode: BodyMode;
-  bodyText: string;
-  assertions: Assertion[];
-}
+// interface ApiRequest {
+//   id: string;
+//   name: string;
+//   method: Method;
+//   url: string;
+//   headers: KeyVal[];
+//   bodyMode: BodyMode;
+//   bodyText: string;
+//   assertions: Assertion[];
+// }
 
-interface Collection {
-  id: string;
-  name: string;
-  description?: string;
-  requests: ApiRequest[];
-}
+// interface Collection {
+//   id: string;
+//   name: string;
+//   description?: string;
+//   requests: ApiRequest[];
+// }
 
 type Suggestion = {
   id: string;
@@ -116,9 +116,9 @@ const ApiTesting: React.FC = () => {
   const [history, setHistory] = useLocalStorage<any[]>('api.history', []);
 
   // Collections
-  const [collections, setCollections] = useLocalStorage<Collection[]>('api.collections', []);
-  const [activeCollection, setActiveCollection] = useState<string | null>(null);
-  const [showCollectionManager, setShowCollectionManager] = useState(false);
+  // const [collections, setCollections] = useLocalStorage<Collection[]>('api.collections', []);
+  // const [activeCollection, setActiveCollection] = useState<string | null>(null);
+  // const [showCollectionManager, setShowCollectionManager] = useState(false);
 
   // Response state
   const [loading, setLoading] = useState(false);
@@ -258,43 +258,43 @@ const ApiTesting: React.FC = () => {
     setEnvs(copy);
   };
 
-  const genPlaywright = () => {
-    const hdrs: Record<string, string> = {};
-    headers.forEach(h => h.key && (hdrs[h.key] = substituteVars(h.value, activeVars)));
-    const hdrStr = pretty(hdrs);
-    let dataExpr = 'undefined';
-    if (bodyMode === 'json' && bodyText.trim()) {
-      try { JSON.parse(bodyText); dataExpr = bodyText; } catch { dataExpr = '/* invalid JSON */ {}'; }
-    } else if (bodyMode === 'text' && bodyText.trim()) {
-      dataExpr = '`' + bodyText.replace(/`/g, '\\`') + '`';
-    } else if (bodyMode === 'form') {
-      const form: Record<string, string> = {};
-      formBody.forEach(kv => kv.key && (form[kv.key] = kv.value));
-      dataExpr = JSON.stringify(form, null, 2);
-    }
-    const finalUrl = substituteVars(url, activeVars);
-    const lines = [
-      "import { test, expect } from '@playwright/test';",
-      '',
-      "test('API test', async ({ request }) => {",
-      `  const res = await request.${method.toLowerCase()}('${finalUrl}', {`,
-      '    headers: ' + hdrStr + ',',
-      dataExpr !== 'undefined' ? '    data: ' + dataExpr + ',' : '',
-      '  });',
-      '  expect(res.status()).toBe(200);',
-      '  const json = await res.json();',
-      ...assertions.map(a => {
-        if (a.op === 'status') return `  expect(res.status()).toBe(${Number(a.expected || '200')});`;
-        const pathParts = a.path.split('.').map(p => `['${p}']`).join('');
-        if (a.op === 'exists') return `  expect(json${pathParts}).toBeTruthy();`;
-        if (a.op === 'equals') return `  expect(String(json${pathParts})).toBe('${(a.expected || '').replace(/'/g, "\\'")}');`;
-        if (a.op === 'contains') return `  expect(String(json${pathParts})).toContain('${(a.expected || '').replace(/'/g, "\\'")}');`;
-        return '';
-      }),
-      '});',
-    ].filter(Boolean);
-    return lines.join('\n');
-  };
+  // const genPlaywright = () => {
+  //   const hdrs: Record<string, string> = {};
+  //   headers.forEach(h => h.key && (hdrs[h.key] = substituteVars(h.value, activeVars)));
+  //   const hdrStr = pretty(hdrs);
+  //   let dataExpr = 'undefined';
+  //   if (bodyMode === 'json' && bodyText.trim()) {
+  //     try { JSON.parse(bodyText); dataExpr = bodyText; } catch { dataExpr = '/* invalid JSON */ {}'; }
+  //   } else if (bodyMode === 'text' && bodyText.trim()) {
+  //     dataExpr = '`' + bodyText.replace(/`/g, '\\`') + '`';
+  //   } else if (bodyMode === 'form') {
+  //     const form: Record<string, string> = {};
+  //     formBody.forEach(kv => kv.key && (form[kv.key] = kv.value));
+  //     dataExpr = JSON.stringify(form, null, 2);
+  //   }
+  //   const finalUrl = substituteVars(url, activeVars);
+  //   const lines = [
+  //     "import { test, expect } from '@playwright/test';",
+  //     '',
+  //     "test('API test', async ({ request }) => {",
+  //     `  const res = await request.${method.toLowerCase()}('${finalUrl}', {`,
+  //     '    headers: ' + hdrStr + ',',
+  //     dataExpr !== 'undefined' ? '    data: ' + dataExpr + ',' : '',
+  //     '  });',
+  //     '  expect(res.status()).toBe(200);',
+  //     '  const json = await res.json();',
+  //     ...assertions.map(a => {
+  //       if (a.op === 'status') return `  expect(res.status()).toBe(${Number(a.expected || '200')});`;
+  //       const pathParts = a.path.split('.').map(p => `['${p}']`).join('');
+  //       if (a.op === 'exists') return `  expect(json${pathParts}).toBeTruthy();`;
+  //       if (a.op === 'equals') return `  expect(String(json${pathParts})).toBe('${(a.expected || '').replace(/'/g, "\\'")}');`;
+  //       if (a.op === 'contains') return `  expect(String(json${pathParts})).toContain('${(a.expected || '').replace(/'/g, "\\'")}');`;
+  //       return '';
+  //     }),
+  //     '});',
+  //   ].filter(Boolean);
+  //   return lines.join('\n');
+  // };
 
   // AI Suggestions from response body (heuristics)
   const generateSuggestions = () => {
@@ -453,10 +453,10 @@ const ApiTesting: React.FC = () => {
         expectedStatus,
         assertions,
       };
-      const res = await axios.post(`${API_BASE}/api/api-testing/test-cases`, payload, {
+      await axios.post(`${API_BASE}/api/api-testing/test-cases`, payload, {
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       });
-      const created = res.data?.data;
+      // const created = res.data?.data;
       setNewTestCaseName('');
       await loadTestCases(selectedSuiteId);
       setError(null);

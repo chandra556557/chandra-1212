@@ -246,9 +246,9 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ projectId }) => {
 
   const COLORS = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#ffa726', '#ff6b9d'];
 
-  const renderCustomLabel = (entry: any) => {
-    return `${entry.name}: ${entry.value}`;
-  };
+  // const renderCustomLabel = (entry: any) => {
+  //   return `${entry.name}: ${entry.value}`;
+  // };
 
   if (loading) {
     return (

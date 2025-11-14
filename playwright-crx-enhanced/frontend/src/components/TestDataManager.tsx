@@ -622,7 +622,7 @@ test('${item.name}', async ({ page }) => {
                             const record = typeof r === 'object' ? r : {};
                             const name = record.username || record.email || record.name || 'Generated User';
                             const createdRes = await axios.post(`${API_URL}/testdata/data`, {
-                              suiteId,
+                              suiteId: selectedSuite?.id,
                               name,
                               environment: genForm.environment,
                               type: genForm.dataType,
@@ -638,7 +638,7 @@ test('${item.name}', async ({ page }) => {
                               data: typeof created.data === 'string' ? JSON.parse(created.data) : created.data,
                             });
                           }
-                          setSelectedSuite(testSuites.find(s => s.id === suiteId) || selectedSuite);
+                          setSelectedSuite(testSuites.find(s => s.id === selectedSuite?.id) || selectedSuite);
                           setTestData(prev => [...items, ...prev]);
                           await loadData();
                           setShowGenModal(false);

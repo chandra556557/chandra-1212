@@ -1,7 +1,6 @@
 -- =====================================================
--- Complete Database Schema Migration
--- Generated: 2025-11-10
--- Description: Full schema with all tables and indexes
+-- Complete Database Schema Migration - Updated 2025
+-- Description: Comprehensive migration covering all tables
 -- =====================================================
 
 -- Enable UUID extension (if not already enabled)
@@ -568,6 +567,81 @@ CREATE TRIGGER update_api_contract_updated_at BEFORE UPDATE ON api_contracts FOR
 DROP TRIGGER IF EXISTS update_api_mock_updated_at ON api_mocks;
 CREATE TRIGGER update_api_mock_updated_at BEFORE UPDATE ON api_mocks FOR EACH ROW EXECUTE FUNCTION update_updated_at_snake();
 
+-- Apply triggers to ExternalAPIConfig and APICallLog
+DROP TRIGGER IF EXISTS update_external_api_config_updated_at ON "ExternalAPIConfig";
+CREATE TRIGGER update_external_api_config_updated_at BEFORE UPDATE ON "ExternalAPIConfig" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_api_call_log_updated_at ON "APICallLog";
+CREATE TRIGGER update_api_call_log_updated_at BEFORE UPDATE ON "APICallLog" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Apply triggers to TestDataset
+DROP TRIGGER IF EXISTS update_test_dataset_updated_at ON "TestDataset";
+CREATE TRIGGER update_test_dataset_updated_at BEFORE UPDATE ON "TestDataset" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- =====================================================
+
+-- Enable RLS on all tables
+ALTER TABLE "User" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Project" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Script" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TestRun" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TestStep" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ExtensionScript" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Variable" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "Breakpoint" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TestSuite" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TestData" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ApiRequest" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "ExternalAPIConfig" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "APICallLog" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "TestDataset" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE test_data_repositories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE test_data_snapshots ENABLE ROW LEVEL SECURITY;
+ALTER TABLE data_cleanup_rules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE synthetic_data_templates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_test_suites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_test_cases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_contracts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_mocks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE api_performance_benchmarks ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for user-based access
+CREATE POLICY "Users can view own data" ON "User" FOR SELECT USING (auth.uid()::text = id);
+CREATE POLICY "Users can update own data" ON "User" FOR UPDATE USING (auth.uid()::text = id);
+
+CREATE POLICY "Projects are user-specific" ON "Project" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "Scripts are user-specific" ON "Script" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "TestRuns are user-specific" ON "TestRun" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "TestSteps are user-specific" ON "TestStep" FOR ALL USING ("testRunId" IN (SELECT id FROM "TestRun" WHERE "userId" = auth.uid()::text));
+CREATE POLICY "ExtensionScripts are user-specific" ON "ExtensionScript" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "Variables are user-specific" ON "Variable" FOR ALL USING ("scriptId" IN (SELECT id FROM "Script" WHERE "userId" = auth.uid()::text));
+CREATE POLICY "Breakpoints are user-specific" ON "Breakpoint" FOR ALL USING ("scriptId" IN (SELECT id FROM "Script" WHERE "userId" = auth.uid()::text));
+CREATE POLICY "TestSuites are user-specific" ON "TestSuite" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "TestData are user-specific" ON "TestData" FOR ALL USING ("suiteId" IN (SELECT id FROM "TestSuite" WHERE "userId" = auth.uid()::text));
+CREATE POLICY "ApiRequests are user-specific" ON "ApiRequest" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "ExternalAPIConfigs are user-specific" ON "ExternalAPIConfig" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "APICallLogs are user-specific" ON "APICallLog" FOR ALL USING ("userId" = auth.uid()::text);
+CREATE POLICY "TestDatasets are user-specific" ON "TestDataset" FOR ALL USING ("userId" = auth.uid()::text);
+
+-- Policies for test data repository tables
+CREATE POLICY "TestDataRepos are user-specific" ON test_data_repositories FOR ALL USING (user_id = auth.uid()::text);
+CREATE POLICY "TestDataSnapshots are user-specific" ON test_data_snapshots FOR ALL USING ("created_by" = auth.uid()::text);
+CREATE POLICY "DataCleanupRules are user-specific" ON data_cleanup_rules FOR ALL USING (repository_id IN (SELECT id FROM test_data_repositories WHERE user_id = auth.uid()::text));
+CREATE POLICY "SyntheticTemplates are user-specific" ON synthetic_data_templates FOR ALL USING (repository_id IN (SELECT id FROM test_data_repositories WHERE user_id = auth.uid()::text));
+
+-- Policies for API testing tables
+CREATE POLICY "ApiTestSuites are user-specific" ON api_test_suites FOR ALL USING (user_id = auth.uid()::text);
+CREATE POLICY "ApiTestCases are user-specific" ON api_test_cases FOR ALL USING (suite_id IN (SELECT id FROM api_test_suites WHERE user_id = auth.uid()::text));
+CREATE POLICY "ApiContracts are user-specific" ON api_contracts FOR ALL USING (suite_id IN (SELECT id FROM api_test_suites WHERE user_id = auth.uid()::text));
+CREATE POLICY "ApiMocks are user-specific" ON api_mocks FOR ALL USING (suite_id IN (SELECT id FROM api_test_suites WHERE user_id = auth.uid()::text));
+CREATE POLICY "ApiPerformanceBenchmarks are user-specific" ON api_performance_benchmarks FOR ALL USING (test_case_id IN (SELECT id FROM api_test_cases WHERE suite_id IN (SELECT id FROM api_test_suites WHERE user_id = auth.uid()::text)));
+
+-- Grant permissions to anon and authenticated roles
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
+
 -- =====================================================
 -- SAMPLE DATA (Optional - for testing)
 -- =====================================================
@@ -597,6 +671,17 @@ CREATE TRIGGER update_api_mock_updated_at BEFORE UPDATE ON api_mocks FOR EACH RO
 -- FROM pg_indexes 
 -- WHERE schemaname = 'public'
 -- ORDER BY tablename, indexname;
+
+-- Check RLS policies
+-- SELECT 
+--     schemaname,
+--     tablename,
+--     policyname,
+--     cmd,
+--     qual
+-- FROM pg_policies 
+-- WHERE schemaname = 'public'
+-- ORDER BY tablename, policyname;
 
 -- =====================================================
 -- MIGRATION COMPLETE
